@@ -4,17 +4,14 @@ Ahmed Alkhateeb, Sam Alex, Paul Varkey, Ying Li, Qi Qu, and Djordje Tujkovic, "[
 # Abstract of the Article
 Supporting high mobility in millimeter wave (mmWave) systems enables a wide range of important applications such as vehicular communications and wireless virtual/augmented reality. Realizing this in practice, though, requires overcoming several challenges. First, the use of narrow beams and the sensitivity of mmWave signals to blockage greatly impact the coverage and reliability of highly-mobile links. Second, highly-mobile users in dense mmWave deployments need to frequently hand-off between base stations (BSs), which is associated with critical control and latency overhead. Further, identifying the optimal beamforming vectors in large antenna array mmWave systems requires considerable training overhead, which significantly affects the efficiency of these mobile systems. In this paper, a novel integrated machine learning and coordinated beamforming solution is developed to overcome these challenges and enable highly-mobile mmWave applications. In the proposed solution, a number of distributed yet coordinating BSs simultaneously serve a mobile user. This user ideally needs to transmit only one uplink training pilot sequence that will be jointly received at the coordinating BSs using omni or quasi-omni beam patterns. These received signals draw a defining signature not only for the user location, but also for its interaction with the surrounding environment. The developed solution then leverages a deep learning model that learns how to use these signatures to predict the beamforming vectors at the BSs. This renders a comprehensive solution that supports highly-mobile mmWave applications with reliable coverage, low latency, and negligible training overhead. Extensive simulation results, based on accurate ray-tracing, show that the proposed deep-learning coordinated beamforming strategy approaches the achievable rate of the genie-aided solution that knows the optimal beamforming vectors with no training overhead, and attains higher rates compared to traditional mmWave beamforming techniques.
 # Code Package Content
-The main script for generating Figure 10, illustrated in the original article, is named "Fig10_generator.m". 
-One additional MATLAB function named "Main_fn.m" is called by the main script.
-![Figure10](https://github.com/WSLCL/DeepLearning-CoordinatedBeamforming/blob/master/Result_BF.png)
-The script adopts the publicly available parameterized [DeepMIMO dataset](http://deepmimo.net/) published for deep learning applications in mmWave and massive MIMO systems.
-
+The main script for generating the figure below:
+![Figure7](https://github.com/WSLCL/DeepLearning-CoordinatedBeamforming/blob/master/Result_BF.png)
+This script adopts the publicly available parameterized [DeepMIMO dataset](http://deepmimo.net/) published for deep learning applications in mmWave and massive MIMO systems.
 **To reproduce the results, please follow these steps:**
 1. Download the code and add it to the "DeepMIMO_Dataset_Generation/RayTracing Scenarios/" folder. (Note that the DeepMIMO source data is available on [this link](http://deepmimo.net/))
-2. Run the file named “Fig10_generator.m” in MATLAB and the script will sequentially execute the following tasks:
-    1. Generate the inputs and outputs of the deep learning model
-    2. Build, train, and test the deep learning model
-    3. Process the deep learning outputs and generate the performance results.
+2. Run the file named "DL_CoordinatedBeamforming.m" in MATLAB to generate the inputs/outputs of the deep learning model.
+3. Run the file named " DLmodel_python_code.py" to build, train, and test the deep learning model. This step requires Python 3.6, Keras, and Tensorflow.
+4. Run the file named "Figure_Generator.m" in MATLAB to process the deep learning outputs and generate the performance results/figures.
 # License and Referencing
 This code package is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/). If you in any way use this code for research that results in publications, please cite our original article:
 
