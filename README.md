@@ -8,7 +8,7 @@ The main script for generating the following figure.
 ![Figure7](https://github.com/WSLCL/DeepLearning-CoordinatedBeamforming/blob/master/Result_BF.png)
 This script adopts the publicly available parameterized [DeepMIMO dataset](http://deepmimo.net/) published for deep learning applications in mmWave and massive MIMO systems.
 **To reproduce the results, please follow these steps:**
-1. Download the code and add it to the "DeepMIMO_Dataset_Generation" folder. (Note that the DeepMIMO source data is available on [this link](http://deepmimo.net/))
+1. Download the "BeamPrediction_Signature.zip" file, expand/uncompress it, and then add the folder to the "DeepMIMO_Dataset_Generation" folder. (Note that the DeepMIMO source data is available on [this link](http://deepmimo.net/))
 2. Run the file named `DL_CoordinatedBeamforming.m` in MATLAB to generate the inputs/outputs of the deep learning model.
 3. Run the file named `DLmodel_python_code.py` to build, train, and test the deep learning model. This step requires Python 3.6, Keras, and Tensorflow.
 4. Run the file named `Figure_Generator.m` in MATLAB to process the deep learning outputs and generate the performance results/figures.
