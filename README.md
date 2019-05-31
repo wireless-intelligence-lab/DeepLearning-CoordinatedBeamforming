@@ -13,6 +13,7 @@ This script adopts the publicly available parameterized [DeepMIMO dataset](http:
 2. Run the file named `DL_CoordinatedBeamforming.m` in MATLAB to generate the inputs/outputs of the deep learning model.
 3. Run the file named `DLmodel_python_code.py` to build, train, and test the deep learning model. This step requires Python 3.6, Keras, and Tensorflow.
 4. Run the file named `Figure_Generator.m` in MATLAB to process the deep learning outputs and generate the performance results/figures.
+
 If you have any questions regarding the code and used dataset, please contact [Ahmed Alkhateeb](http://www.aalkhateeb.net/).
 # License and Referencing
 This code package is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/). If you in any way use this code for research that results in publications, please cite our original article:
