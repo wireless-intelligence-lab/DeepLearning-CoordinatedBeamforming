@@ -9,7 +9,7 @@ The main script for generating the following figure.
 This script adopts the first version of the publicly available parameterized [DeepMIMO dataset](https://deepmimo.net/versions/v1/) published for deep learning applications in mmWave and massive MIMO systems. The ['O1_60'](https://deepmimo.net/scenarios/o1-scenario/) scenario is adopted for this figure.
 
 **To reproduce the results, please follow these steps:**
-1. Download the repository as a zip file, expand/uncompress it into the folder to the "DeepMIMO_Dataset_Generation" folder. (Note that The DeepMIMOv1 dataset generation files are available on [this link](https://deepmimo.net/versions/v1/) and the source data of the 'O1_60' scenario is available on [this link](https://deepmimo.net/scenarios/o1-scenario/)).
+1. Download the repository as a zip file, expand/uncompress the scripts into the "DeepMIMO_Dataset_Generation" folder. (Note that The DeepMIMOv1 dataset generation files are available on [this link](https://deepmimo.net/versions/v1/) and the source data of the 'O1_60' scenario is available on [this link](https://deepmimo.net/scenarios/o1-scenario/)).
 2. Run the file named `DL_CoordinatedBeamforming.m` in MATLAB to generate the inputs/outputs of the deep learning model.
 3. Run the file named `DLmodel_python_code.py` to build, train, and test the deep learning model. This step requires Python 3.6, Keras, and Tensorflow.
 4. Run the file named `Figure_Generator.m` in MATLAB to process the deep learning outputs and generate the performance results/figures.
