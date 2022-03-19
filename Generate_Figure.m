@@ -6,9 +6,14 @@
 % Systems," in IEEE Access, vol. 6, pp. 37328-37348, 2018.
 % ---------------------------------------------------------------------- %
 
+%%
 % ------  DeepMIMO Dataset Generation  --------------------------------- % 
-[DeepMIMO_dataset,params]=DeepMIMO_CBF_Dataset_Generator();
+% addpath('../DeepMIMOv2/DeepMIMO_functions') % DeepMIMO functions folder
+addpath('./BF_codebook/')
+params = read_params('CBF_parameters.m');
+[DeepMIMO_dataset,params] = DeepMIMO_generator(params);
 
+%%
 %========================= Coordinated Deep Learning code ================
 % Initialization
 % Beamforming codebook parameters
@@ -17,11 +22,11 @@ over_sampling_y=2;            % The beamsteering oversampling factor in the y di
 over_sampling_z=1;            % The beamsteering oversampling factor in the z direction
 
 % Generating the beamforming codebook 
-[BF_codebook]=UPA_codebook_generator(params.num_ant_x,params.num_ant_y,params.num_ant_z,over_sampling_x,over_sampling_y,over_sampling_z,params.ant_spacing);
-codebook_size=size(BF_codebook,2);
+[BF_codebook]=UPA_codebook_generator(params.num_ant_BS(1), params.num_ant_BS(2), params.num_ant_BS(3),over_sampling_x,over_sampling_y,over_sampling_z,params.ant_spacing_BS);
+codebook_size=size(BF_codebook, 2);
 
-num_sampled_OFDM=size(DeepMIMO_dataset{1}.user{1}.channel,2);    % Number of OFDM samples which equals (from mmMIMO Dataset Generator) ofdm_num_subcarriers/output_subcarrier_downsampling_factor;
-num_beams=params.num_ant_x*params.num_ant_y*params.num_ant_z*over_sampling_x*over_sampling_y*over_sampling_z;
+num_sampled_OFDM=size(DeepMIMO_dataset{1}.user{1}.channel, 3);    % Number of OFDM samples which equals (from mmMIMO Dataset Generator) ofdm_num_subcarriers/output_subcarrier_downsampling_factor;
+num_beams=prod(params.num_ant_BS)*over_sampling_x*over_sampling_y*over_sampling_z;
 
 % ------------ Plotting Deep Learning Outputs ----------------------------
 num_DL_size_points=15; 
@@ -80,7 +85,7 @@ end
 
 
 % Eff achievable rate calculations
-theta_user=(102/params.num_ant_y)*pi/180;
+theta_user=(102/params.num_ant_BS(2))*pi/180;
 alpha=60*pi/180;
 distance_user=10;
 Tc_const=(distance_user*theta_user)/(2*sin(alpha)); % ms 
@@ -93,11 +98,25 @@ Tc=Tc_const/v;
 overhead_opt=1-(num_beams*Tt)/Tc; % overhead of beam training
 overhead_DL=1-Tt/Tc; % overhead of proposed DL method
 
-% Plotting the figure
+%% Plotting the figure
 DL_size_array=0:2.5:2.5*(num_DL_size_points-1);
 
-figure (1) 
-hold on;
-plot(DL_size_array,ach_rate_opt,'--k')
-plot(DL_size_array,ach_rate_DL*overhead_DL,'g')
-plot(DL_size_array,ach_rate_opt*overhead_opt,'b')
+set(0,'defaultAxesFontSize',12)
+set(0,'DefaultLineLineWidth',1.5)
+
+figure('Name', 'achievable_rate');
+
+plot(DL_size_array,ach_rate_opt, 'k--',...
+    'DisplayName', 'Genie-aided Coordinated Beamforming')
+hold on; grid on; box on;
+plot(DL_size_array,ach_rate_DL*overhead_DL, 'o-',...
+    'DisplayName', 'Deep Learning Coordinated Beamforming',...
+    'Color', '#0072BD', 'MarkerFaceColor','w')
+plot(DL_size_array,ach_rate_opt*overhead_opt,'s-',...
+    'DisplayName', 'Baseline Coordinated Beamforming',...
+    'Color',"#A2142F",'MarkerFaceColor','w')
+
+xlabel('Deep Learning Dataset Size (Thousand Samples)')
+ylabel('Achievable Rate (bps/Hz)')
+legend('Location','SouthEast','FontSize',12)
+savefig('result.fig')

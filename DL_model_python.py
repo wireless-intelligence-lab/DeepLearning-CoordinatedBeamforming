@@ -1,21 +1,12 @@
-from __future__ import division
-import os, keras 
-os.environ["KERAS_BACKEND"] = "theano"
-os.environ["THEANO_FLAGS"]  = "device=gpu%d"%(1)
+import os 
 import numpy as np
-import theano as th
-import theano.tensor as T
-from keras.utils import np_utils
-import keras.models as models
-from keras.layers.core import Reshape,Dense,Dropout,Activation
-from keras.optimizers import adam
+import keras
+from keras.layers import Dense,Dropout
 from scipy.io import loadmat, savemat
-import os.path
-from keras import backend as K    
 
 # Model training function
 def train(In_train, Out_train, In_test, Out_test,
-          nb_epoch, batch_size,dr,
+          epochs, batch_size,dr,
           num_hidden_layers, nodes_per_layer,
           loss_fn,n_BS,n_beams):
     
@@ -23,33 +14,30 @@ def train(In_train, Out_train, In_test, Out_test,
 
     AP_models = []
     
-    for idx in range(0, n_BS*n_beams-2, n_beams):
-        idx_str = str(idx / n_beams + 1)
+    for bs_idx in range(0, n_BS):
+        idx = bs_idx*n_beams
+        idx_str = 'BS%i'%bs_idx
         
-        model = models.Sequential()
-        model.add(Dense(nodes_per_layer, activation='relu', init='he_normal',
-                  name="dense" + idx_str + "1", input_shape=in_shp))
+        model = keras.Sequential()
+        model.add(Dense(nodes_per_layer, activation='relu', kernel_initializer='he_normal', input_shape=in_shp))
         model.add(Dropout(dr))
         for h in range(num_hidden_layers):
-            model.add(Dense(nodes_per_layer, activation='relu',
-                      init='he_normal', name="dense" + idx_str + "h" + str(h)))
+            model.add(Dense(nodes_per_layer, activation='relu', kernel_initializer='he_normal'))
             model.add(Dropout(dr))
         
-        model.add(Dense(n_beams, activation='relu', init='he_normal',
-                  name="dense" + idx_str + "o"))
+        model.add(Dense(n_beams, activation='relu', kernel_initializer='he_normal'))
         model.compile(loss=loss_fn, optimizer='adam')
         model.summary()
-        # perform training ...
-        earlyStoppingCallback = \
-            keras.callbacks.EarlyStopping(monitor='val_loss',
-                                          patience=5,
-                                          verbose=0,
-                                          mode='auto')
-        filepath = 'DLCB_code_output/Results_mmWave_ML'+str(idx)
+        
+        filepath = 'DLCB_code_output/Results_mmWave_ML_BS' + idx_str
+        
+        if not os.path.exists(filepath):
+            os.makedirs(filepath)
+
         history = model.fit(In_train,
                             Out_train[:, idx:idx + n_beams],
                             batch_size=batch_size,
-                            nb_epoch=nb_epoch,
+                            epochs=epochs,
                             verbose=2,
                             validation_data=(In_test, Out_test[:,idx:idx + n_beams]),
                             callbacks = [
@@ -57,7 +45,6 @@ def train(In_train, Out_train, In_test, Out_test,
                                 keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, verbose=0, mode='auto')
                             ])
     
-        # we re-load the best weights once training is finished
         model.load_weights(filepath)
         
         AP_models.append(model)
@@ -74,7 +61,7 @@ Out_set=Out_set_file['DL_output']
 
 # Parameter initialization
 num_user_tot=In_set.shape[0]
-n_DL_size=[.001,.05,.1,.15,.2,.25,.3,.35,.4,.45,.5,.55,.6,.65,.7,.75,.8]
+n_DL_size=[.001,.05,.1,.15,.2,.25,.3,.35,.4,.45,.5,.55,.6,.65,.7]
 count=0
 num_tot_TX=4
 num_beams=512
@@ -102,7 +89,7 @@ for DL_size_ratio in n_DL_size:
     
     
     # Learning model parameters
-    nb_epoch = 10     
+    epochs = 10     
     batch_size = 100  
     dr = 0.05                  # dropout rate  
     num_hidden_layers=4
@@ -111,18 +98,17 @@ for DL_size_ratio in n_DL_size:
     
     # Model training
     AP_models = train(In_train, Out_train, In_test, Out_test,
-                                          nb_epoch, batch_size,dr,
+                                          epochs, batch_size,dr,
                                           num_hidden_layers, nodes_per_layer,
                                           loss_fn,num_tot_TX,num_beams)
-
     
     # Model running/testing
     DL_Result={}
-    for id in range(0,num_tot_TX,1): 
-        beams_predicted=AP_models[id].predict( In_test, batch_size=10, verbose=0)
+    for idx in range(0,num_tot_TX,1): 
+        beams_predicted=AP_models[idx].predict( In_test, batch_size=10, verbose=0)
     
-        DL_Result['TX'+str(id+1)+'Pred_Beams']=beams_predicted
-        DL_Result['TX'+str(id+1)+'Opt_Beams']=Out_test[:,id*num_beams:(id+1)*num_beams]
+        DL_Result['TX'+str(idx+1)+'Pred_Beams']=beams_predicted
+        DL_Result['TX'+str(idx+1)+'Opt_Beams']=Out_test[:,idx*num_beams:(idx+1)*num_beams]
 
     DL_Result['user_index']=test_index
-    savemat('DLCB_code_output/DL_Result'+str(count),DL_Result)
+    savemat('DLCB_code_output/DL_Result' + str(count) + '.mat',DL_Result)
