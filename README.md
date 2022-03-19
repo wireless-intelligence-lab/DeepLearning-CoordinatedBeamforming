@@ -15,7 +15,9 @@ This script adopts the first version of the publicly available parameterized [De
 4. Run the file named `DL_model_python.py` to build, train, and test the deep learning model. This step requires Python 3.6, Keras, and Tensorflow.
 5. Run the file named `Generate_Figure.m` in MATLAB to process the deep learning outputs and generate the performance results/figures.
 
-Note: For steps 3 and 5, add DeepMIMOv2 folder and subfolders to the MATLAB path - right click on the DeepMIMOv2 folder on MATLAB explorer -> Add to Path -> Selected Folders and Subfolders.
+Note: For steps 3 and 5, add DeepMIMOv2 folder and subfolders to the MATLAB path. You can either
+- Right click on the DeepMIMOv2 folder on MATLAB explorer -> Add to Path -> Selected Folders and Subfolders.
+- Add a command to the beginning of the script: `addpath(genpath('deepmimov2_folder_directory'))`.
 
 If you have any questions regarding the code and used dataset, please contact [Ahmed Alkhateeb](https://www.aalkhateeb.net/).
 # License and Referencing
