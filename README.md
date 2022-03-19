@@ -12,7 +12,7 @@ This script adopts the first version of the publicly available parameterized [De
 1. Download DeepMIMOv2 dataset generation files (available on [this link](https://deepmimo.net/versions/v2-matlab/)) and the source data of the 'O1_60' scenario (available on [this link](https://deepmimo.net/scenarios/o1-scenario/)).
 2. Download the repository files. 
 3. Run the file named `Generate_DL_data.m` in MATLAB to generate the inputs/outputs of the deep learning model. 
-4. Run the file named `DL_model_python.py` to build, train, and test the deep learning model. This step requires Python 3.6, Keras, and Tensorflow.
+4. Run the file named `DL_model_python.py` to build, train, and test the deep learning model. This step requires Python 3.7, Keras, and Tensorflow.
 5. Run the file named `Generate_Figure.m` in MATLAB to process the deep learning outputs and generate the performance results/figures.
 
 Note: For steps 3 and 5, add DeepMIMOv2 folder and subfolders to the MATLAB path. You can either
